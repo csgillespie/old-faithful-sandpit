@@ -43,16 +43,21 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
         id: install-r
 
-      - name: Install R deployment dependencies
+      - name: Set Rscript to fail on warnings
         run: |
-          options(warn = 2)
+          Rscript -e "options('repos')"
+          sudo Rscript -e 'fname = file.path(Sys.getenv("R_HOME"), "etc", "Rprofile.site"); write("options(warn = 2)", file = fname)'
+          Rscript -e "options('repos')"
+
+
+      - name: Install app-deployment R dependencies
+        run: |
           source("${{ env.SCRIPT }}")
           install_script_deps()
         shell: Rscript {0}
 
-      - name: Install R runtime dependencies
+      - name: Install app-runtime R dependencies
         run: |
-          options(warn = 2)
           install.packages('remotes')
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
@@ -63,7 +68,6 @@ jobs:
 
       - name: Deploy the app for this branch
         run: |
-          options(warn = 2)
           source("${{ env.SCRIPT }}")
           deploy(account = "${{ env.SHINYAPPS_IO_ACCOUNT }}")
         shell: Rscript {0}
