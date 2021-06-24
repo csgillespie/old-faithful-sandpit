@@ -46,7 +46,7 @@ jobs:
       - name: Set Rscript to fail on warnings
         run: |
           Rscript -e "options('repos')"
-          echo "options(warn = 2)" >> .Rprofile
+          Rscript -e 'fname = file.path(Sys.getenv("R_HOME"), "etc", "Rprofile.site"); write("options(warn = 2)", file = fname)'
           Rscript -e "options('repos')"
 
 
