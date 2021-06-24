@@ -45,7 +45,9 @@ jobs:
 
       - name: Set Rscript to fail on warnings
         run: |
+          Rscript -e "options('repos')"
           echo "options(warn = 2)" >> .Rprofile
+          Rscript -e "options('repos')"
 
 
       - name: Install app-deployment R dependencies
